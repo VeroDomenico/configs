@@ -13,7 +13,31 @@ export PATH
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
+# Enable bash completion
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+elif [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+fi
 
+# Save multi-line commands as single command in history
+shopt -s cmdhist
+
+# Append to the history file, rather than overwriting it
+shopt -s histappend
+
+# Save each command before executing it
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+# History file size
+HISTFILESIZE=10000
+# Number of commands to remember in the command history
+HISTSIZE=10000
+
+# Bind `Ctrl + r` to search through command history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind '"\C-r": "\C-r"'  # Ensure Ctrl+r works as well
 # User specific aliases and functions
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*; do
@@ -28,8 +52,11 @@ eval "$(starship init bash)"
 
 # Aliases
 alias ll='exa -la --icons'
-alias cat='batcat'
+alias cat='bat'
+alias vi='lvim'
+alias nvim='lvim'
 alias tmux='tmux -2'
+alias code='lvim'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
